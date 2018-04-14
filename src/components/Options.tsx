@@ -1,6 +1,6 @@
 import React from "react";
-import {CompilerApi, ScriptKind, ScriptTarget, compilerVersionCollection, compilerPackageNames} from "../compiler";
-import {OptionsState, TreeMode} from "../types";
+import { CompilerApi, ScriptKind, ScriptTarget, compilerVersionCollection, compilerPackageNames } from "../compiler";
+import { OptionsState, TreeMode } from "../types";
 
 export interface OptionsProps {
     api: CompilerApi | undefined;

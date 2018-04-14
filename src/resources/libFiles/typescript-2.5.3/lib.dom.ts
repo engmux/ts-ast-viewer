@@ -1,4 +1,4 @@
-/* tslint:ignore */
+/* tslint:disable */
 export default {
     fileName: `/lib.dom.d.ts`,
     text: `/*! *****************************************************************************

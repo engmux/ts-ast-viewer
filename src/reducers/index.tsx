@@ -1,8 +1,8 @@
 ﻿/* barrel:ignore */
-import {AllActions} from "../actions";
-import {StoreState, OptionsState} from "../types";
-import {Node, createSourceFile, CompilerApi} from "../compiler";
-import {SET_SELECTED_NODE, SET_CODE, SET_POS, SET_OPTIONS, REFRESH_SOURCEFILE} from "./../constants";
+import { AllActions } from "../actions";
+import { StoreState, OptionsState } from "../types";
+import { Node, createSourceFile, CompilerApi, convertOptions } from "../compiler";
+import { SET_SELECTED_NODE, SET_CODE, SET_POS, SET_OPTIONS, REFRESH_SOURCEFILE } from "./../constants";
 
 export function appReducer(state: StoreState, action: AllActions): StoreState {
     switch (action.type) {
@@ -19,7 +19,10 @@ export function appReducer(state: StoreState, action: AllActions): StoreState {
             };
         }
         case REFRESH_SOURCEFILE: {
-            const newState = {...state};
+            const newState = {
+                ...state,
+                options: convertOptions(state.compiler == null ? undefined : state.compiler.api, action.api, state.options)
+            };
             fillNewSourceFileState(action.api, newState, state.code, state.options);
             return newState;
         }

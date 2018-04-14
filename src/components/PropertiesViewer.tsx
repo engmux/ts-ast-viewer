@@ -1,8 +1,8 @@
 ﻿import React from "react";
-import {TypeChecker, Node, SourceFile, Symbol, Type, CompilerApi} from "../compiler";
+import { TypeChecker, Node, SourceFile, Symbol, Type, CompilerApi } from "../compiler";
 import TreeView from "react-treeview";
 import CircularJson from "circular-json";
-import {getSyntaxKindName, createHashSet} from "../utils";
+import { getSyntaxKindName, createHashSet } from "../utils";
 
 export interface PropertiesViewerProps {
     api: CompilerApi;
@@ -15,7 +15,6 @@ export class PropertiesViewer extends React.Component<PropertiesViewerProps> {
     render() {
         const {selectedNode, sourceFile, typeChecker, api} = this.props;
         const keyValues = Object.keys(selectedNode).map(key => ({ key, value: selectedNode[key] }));
-        console.log(api.tsAstViewerPackageName);
         return (
             <div className="propertiesViewer">
                 <div className="container">

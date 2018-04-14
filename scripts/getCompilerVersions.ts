@@ -14,5 +14,5 @@ export function getCompilerVersions() {
         versions.push({ version: matches[0], name: key });
     }
 
-    return versions;
+    return versions.sort((a, b) => a.version > b.version ? -1 : 1);
 }

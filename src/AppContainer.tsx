@@ -1,9 +1,9 @@
-﻿import {connect, Dispatch} from 'react-redux';
-import {Node, CompilerApi, getCompilerApi, compilerPackageNames} from "./compiler";
+﻿import { connect, Dispatch } from 'react-redux';
+import { Node, CompilerApi, getCompilerApi, compilerPackageNames } from "./compiler";
 import App from "./App";
 import * as actions from "./actions";
-import {StoreState, OptionsState} from "./types";
-import {debounce} from "./utils";
+import { StoreState, OptionsState } from "./types";
+import { debounce } from "./utils";
 
 export function mapStateToProps(state: StoreState) {
     return {

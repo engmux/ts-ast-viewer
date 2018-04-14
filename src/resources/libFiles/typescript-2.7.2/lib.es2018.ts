@@ -1,4 +1,4 @@
-/* tslint:ignore */
+/* tslint:disable */
 export default {
     fileName: `/lib.es2018.d.ts`,
     text: `/*! *****************************************************************************

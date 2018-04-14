@@ -1,6 +1,6 @@
 /* Automatically maintained from package.json. Do not edit! */
-import {CompilerApi} from "./CompilerApi";
-import {compilerPackageNames, importCompilerApi, immportLibFiles} from "./compilerVersions";
+import { CompilerApi } from "./CompilerApi";
+import { compilerPackageNames, importCompilerApi, immportLibFiles } from "./compilerVersions";
 
 const compilerTypes: { [name: string]: Promise<CompilerApi>; } = {};
 
@@ -16,11 +16,13 @@ async function loadCompilerApi(packageName: compilerPackageNames) {
     const libFilesPromise = immportLibFiles(packageName);
     const compilerApiPromise = importCompilerApi(packageName);
     const api = await compilerApiPromise as any as CompilerApi;
-    api.tsAstViewerPackageName = packageName;
-    api.tsAstViewerCachedSourceFiles = {};
+    api.tsAstViewer = {
+        packageName,
+        cachedSourceFiles: {}
+    };
     const libFiles = await libFilesPromise;
     for (const sourceFile of getLibSourceFiles())
-        api.tsAstViewerCachedSourceFiles[sourceFile.fileName] = sourceFile;
+        api.tsAstViewer.cachedSourceFiles[sourceFile.fileName] = sourceFile;
     return api;
 
     function getLibSourceFiles() {

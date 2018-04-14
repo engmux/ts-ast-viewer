@@ -1,16 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {createStore} from "redux";
-import {Provider} from "react-redux";
-import {ScriptTarget, ScriptKind} from "./compiler";
+import { createStore } from "redux";
+import { Provider } from "react-redux";
+import { ScriptTarget, ScriptKind } from "./compiler";
 import AppContainer from "./AppContainer";
 import registerServiceWorker from "./registerServiceWorker";
 import "./index.css";
 import "./external/react-treeview.css";
 import "./external/react-splitpane.css";
 import * as actions from "./actions";
-import {StoreState, TreeMode} from "./types";
-import {appReducer} from "./reducers";
+import { StoreState, TreeMode } from "./types";
+import { appReducer } from "./reducers";
 
 const initialScriptTarget: ScriptTarget = 6 /* Latest */;
 const initialScriptKind: ScriptKind = 4 /* TSX */;

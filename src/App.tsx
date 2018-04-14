@@ -1,8 +1,9 @@
 import React from "react";
 import SplitPane from "react-split-pane";
+import { BeatLoader } from "react-spinners";
 import * as components from "./components";
-import {Node, compilerPackageNames} from "./compiler";
-import {StoreState, OptionsState} from "./types";
+import { Node, compilerPackageNames } from "./compiler";
+import { StoreState, OptionsState } from "./types";
 import "./App.css";
 
 export interface Props extends StoreState {
@@ -38,7 +39,7 @@ export default function App(props: Props) {
 
     function getCompilerDependentPanes() {
         if (compiler == null)
-            return <div>Loading...</div>;
+            return <div className={"verticallyCenter horizontallyCenter fillHeight"}><BeatLoader color={'#fff'} loading={true} size={25} /></div>;
 
         return <SplitPane split="vertical" minSize={50} defaultSize="50%">
             <components.TreeViewer

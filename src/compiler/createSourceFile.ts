@@ -1,10 +1,10 @@
-﻿import {CompilerApi, SourceFile, CompilerOptions, ScriptTarget, ScriptKind, CompilerHost} from "./CompilerApi";
+﻿import { CompilerApi, SourceFile, CompilerOptions, ScriptTarget, ScriptKind, CompilerHost } from "./CompilerApi";
 
 export function createSourceFile(api: CompilerApi, code: string, scriptTarget: ScriptTarget, scriptKind: ScriptKind) {
-    const name = `/ts-ast-viewer${getExtension(api, scriptKind)}`;
-    const sourceFile = api.createSourceFile(name, code, scriptTarget, false, scriptKind);
+    const filePath = `/ts-ast-viewer${getExtension(api, scriptKind)}`;
+    const sourceFile = api.createSourceFile(filePath, code, scriptTarget, false, scriptKind);
     const options: CompilerOptions = { strict: true, target: scriptTarget, allowJs: true, module: api.ModuleKind.ES2015 };
-    const files: { [name: string]: SourceFile | undefined; } = { [name]: sourceFile, ...api.tsAstViewerCachedSourceFiles };
+    const files: { [name: string]: SourceFile | undefined; } = { [filePath]: sourceFile, ...api.tsAstViewer.cachedSourceFiles };
 
     const compilerHost: CompilerHost = {
         getSourceFile: (fileName: string, languageVersion: ScriptTarget, onError?: (message: string) => void) => {
@@ -12,8 +12,8 @@ export function createSourceFile(api: CompilerApi, code: string, scriptTarget: S
         },
         // getSourceFileByPath: (...) => {}, // not providing these will force it to use the file name as the file path
         // getDefaultLibLocation: (...) => {},
-        getDefaultLibFileName: (options: CompilerOptions) => "/" + api.getDefaultLibFileName(options),
-        writeFile: (filePath, data, writeByteOrderMark, onError, sourceFiles) => {
+        getDefaultLibFileName: (defaultLibOptions: CompilerOptions) => "/" + api.getDefaultLibFileName(defaultLibOptions),
+        writeFile: () => {
             // do nothing
         },
         getCurrentDirectory: () => "/",
@@ -23,7 +23,7 @@ export function createSourceFile(api: CompilerApi, code: string, scriptTarget: S
         getCanonicalFileName: (fileName: string) => fileName,
         useCaseSensitiveFileNames: () => true,
         getNewLine: () => "\n",
-        getEnvironmentVariable: (name: string) => ""
+        getEnvironmentVariable: () => ""
     };
     const program = api.createProgram([...Object.keys(files)], options, compilerHost);
     const typeChecker = program.getTypeChecker();
@@ -46,5 +46,8 @@ function getExtension(api: CompilerApi, scriptKind: ScriptKind) {
         case api.ScriptKind.External:
         case api.ScriptKind.Unknown:
             return "";
+        default:
+            const assertNever: never = scriptKind;
+            throw new Error(`Not implemented ScriptKind: ${api.ScriptKind[scriptKind]}`);
     }
 }

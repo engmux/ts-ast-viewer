@@ -1,9 +1,9 @@
 ﻿import React from "react";
-import {SourceFile, Node, CompilerApi} from "../compiler";
+import { SourceFile, Node, CompilerApi } from "../compiler";
 import TreeView from "react-treeview";
 import CircularJson from "circular-json";
-import {getSyntaxKindName} from "../utils";
-import {TreeMode} from "../types";
+import { getSyntaxKindName } from "../utils";
+import { TreeMode } from "../types";
 
 export interface TreeViewerProps {
     api: CompilerApi;

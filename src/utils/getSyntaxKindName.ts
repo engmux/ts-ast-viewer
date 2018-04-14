@@ -1,4 +1,4 @@
-import {CompilerApi, SyntaxKind} from "../compiler";
+import { CompilerApi, SyntaxKind } from "../compiler";
 
 export function getSyntaxKindName(api: CompilerApi, kind: SyntaxKind) {
     return getKindCacheForApi(api)[kind];
@@ -7,9 +7,9 @@ export function getSyntaxKindName(api: CompilerApi, kind: SyntaxKind) {
 const kindCache: { [packageName: string]: { [kind: number]: string; } } = {};
 
 function getKindCacheForApi(api: CompilerApi) {
-    if (kindCache[api.tsAstViewerPackageName] == null)
-        kindCache[api.tsAstViewerPackageName] = getKindNamesForApi(api);
-    return kindCache[api.tsAstViewerPackageName];
+    if (kindCache[api.tsAstViewer.packageName] == null)
+        kindCache[api.tsAstViewer.packageName] = getKindNamesForApi(api);
+    return kindCache[api.tsAstViewer.packageName];
 }
 
 function getKindNamesForApi(api: CompilerApi) {
