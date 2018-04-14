@@ -2,7 +2,7 @@
 import { Node, CompilerApi, getCompilerApi, compilerPackageNames } from "./compiler";
 import App from "./App";
 import * as actions from "./actions";
-import { StoreState, OptionsState } from "./types";
+import { StoreState, OptionsState, ApiLoadingState } from "./types";
 import { debounce } from "./utils";
 
 export function mapStateToProps(state: StoreState) {
@@ -33,12 +33,14 @@ export function mapDispatchToProps(dispatch: Dispatch<actions.AllActions>) {
 
     async function updateSourceFile(compilerPackageName: compilerPackageNames) {
         try {
+            dispatch(actions.setApiLoadingState(ApiLoadingState.Loading));
             const api = await getCompilerApi(compilerPackageName);
             dispatch(actions.refreshSourceFile(api));
+            dispatch(actions.setApiLoadingState(ApiLoadingState.Loaded));
         }
         catch (err) {
-            // todo: better error
-            console.log(err);
+            console.error(err);
+            dispatch(actions.setApiLoadingState(ApiLoadingState.Error));
         }
     }
 }

@@ -9,13 +9,14 @@ import "./index.css";
 import "./external/react-treeview.css";
 import "./external/react-splitpane.css";
 import * as actions from "./actions";
-import { StoreState, TreeMode } from "./types";
+import { StoreState, TreeMode, ApiLoadingState } from "./types";
 import { appReducer } from "./reducers";
 
 const initialScriptTarget: ScriptTarget = 6 /* Latest */;
 const initialScriptKind: ScriptKind = 4 /* TSX */;
 const initialCode = "";
 const store = createStore<StoreState>(appReducer, {
+    apiLoadingState: ApiLoadingState.Loading,
     code: initialCode,
     options: {
         compilerPackageName: "typescript",

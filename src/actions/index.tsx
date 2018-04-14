@@ -1,7 +1,7 @@
 ﻿/* barrel:ignore */
 import { Node, CompilerApi } from "../compiler";
 import * as constants from "../constants";
-import { OptionsState } from "../types";
+import { OptionsState, ApiLoadingState } from "../types";
 
 export interface SetCode {
     type: constants.SET_CODE;
@@ -12,6 +12,18 @@ export function setCode(code: string): SetCode {
     return {
         type: constants.SET_CODE,
         code
+    };
+}
+
+export interface SetApiLoadingState {
+    type: constants.SET_API_LOADING_STATE;
+    loadingState: ApiLoadingState;
+}
+
+export function setApiLoadingState(loadingState: ApiLoadingState): SetApiLoadingState {
+    return {
+        type: constants.SET_API_LOADING_STATE,
+        loadingState
     };
 }
 
@@ -63,4 +75,4 @@ export function setOptions(options: Partial<OptionsState>): SetOptions {
     };
 }
 
-export type AllActions = SetCode | RefreshSourceFile | SetSelectedNode | SetPos | SetOptions;
+export type AllActions = SetCode | SetApiLoadingState | RefreshSourceFile | SetSelectedNode | SetPos | SetOptions;

@@ -2,7 +2,7 @@
 import { AllActions } from "../actions";
 import { StoreState, OptionsState } from "../types";
 import { Node, createSourceFile, CompilerApi, convertOptions } from "../compiler";
-import { SET_SELECTED_NODE, SET_CODE, SET_POS, SET_OPTIONS, REFRESH_SOURCEFILE } from "./../constants";
+import { SET_SELECTED_NODE, SET_CODE, SET_API_LOADING_STATE, SET_POS, SET_OPTIONS, REFRESH_SOURCEFILE } from "./../constants";
 
 export function appReducer(state: StoreState, action: AllActions): StoreState {
     switch (action.type) {
@@ -16,6 +16,12 @@ export function appReducer(state: StoreState, action: AllActions): StoreState {
                     ...state.compiler,
                     selectedNode: action.node
                 }
+            };
+        }
+        case SET_API_LOADING_STATE: {
+            return {
+                ...state,
+                apiLoadingState: action.loadingState
             };
         }
         case REFRESH_SOURCEFILE: {
@@ -69,6 +75,9 @@ export function appReducer(state: StoreState, action: AllActions): StoreState {
                     ...action.options
                 }
             };
+        }
+        default: {
+            const assertNever: never = action;
         }
     }
     return state;

@@ -4,6 +4,7 @@ import { CompilerApi, Program, TypeChecker, SourceFile, Node, ScriptTarget, Scri
 export interface StoreState {
     code: string;
     options: OptionsState;
+    apiLoadingState: ApiLoadingState;
     compiler: CompilerState | undefined;
 }
 
@@ -25,4 +26,10 @@ export interface OptionsState {
 export enum TreeMode {
     getChildren,
     forEachChild
+}
+
+export enum ApiLoadingState {
+    Loading,
+    Loaded,
+    Error
 }

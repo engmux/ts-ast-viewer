@@ -3,7 +3,7 @@ import SplitPane from "react-split-pane";
 import { BeatLoader } from "react-spinners";
 import * as components from "./components";
 import { Node, compilerPackageNames } from "./compiler";
-import { StoreState, OptionsState } from "./types";
+import { StoreState, OptionsState, ApiLoadingState } from "./types";
 import "./App.css";
 
 export interface Props extends StoreState {
@@ -19,7 +19,7 @@ export default function App(props: Props) {
     return (
         <div className="App">
             <SplitPane split="horizontal" defaultSize={50} allowResize={false}>
-                <div className="App-header clearfix">
+                <div className="AppHeader clearfix">
                     <h2 id="title">TypeScript AST Viewer</h2>
                     <components.Options
                         api={compiler == null ? undefined : compiler.api}
@@ -38,8 +38,10 @@ export default function App(props: Props) {
     );
 
     function getCompilerDependentPanes() {
-        if (compiler == null)
+        if (compiler == null || props.apiLoadingState === ApiLoadingState.Loading)
             return <div className={"verticallyCenter horizontallyCenter fillHeight"}><BeatLoader color={'#fff'} loading={true} size={25} /></div>;
+        else if (props.apiLoadingState === ApiLoadingState.Error)
+            return <div className={"errorMessage"}>Error loading compiler API. Please refresh the page to try again.</div>;
 
         return <SplitPane split="vertical" minSize={50} defaultSize="50%">
             <components.TreeViewer
