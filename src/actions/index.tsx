@@ -1,5 +1,5 @@
 ﻿/* barrel:ignore */
-import {Node} from "../compiler";
+import {Node, CompilerApi} from "../compiler";
 import * as constants from "../constants";
 import {OptionsState} from "../types";
 
@@ -17,11 +17,13 @@ export function setCode(code: string): SetCode {
 
 export interface RefreshSourceFile {
     type: constants.REFRESH_SOURCEFILE;
+    api: CompilerApi;
 }
 
-export function refreshSourceFile(): RefreshSourceFile {
+export function refreshSourceFile(api: CompilerApi): RefreshSourceFile {
     return {
-        type: constants.REFRESH_SOURCEFILE
+        type: constants.REFRESH_SOURCEFILE,
+        api
     };
 }
 
@@ -51,10 +53,10 @@ export function setPos(pos: number): SetPos {
 
 export interface SetOptions {
     type: constants.SET_OPTIONS;
-    options: OptionsState;
+    options: Partial<OptionsState>;
 }
 
-export function setOptions(options: OptionsState): SetOptions {
+export function setOptions(options: Partial<OptionsState>): SetOptions {
     return {
         type: constants.SET_OPTIONS,
         options

@@ -1,8 +1,7 @@
 ﻿/* barrel:ignore */
-import ts from "typescript";
 import {AllActions} from "../actions";
 import {StoreState, OptionsState} from "../types";
-import {createSourceFile} from "../compiler";
+import {Node, createSourceFile, CompilerApi} from "../compiler";
 import {SET_SELECTED_NODE, SET_CODE, SET_POS, SET_OPTIONS, REFRESH_SOURCEFILE} from "./../constants";
 
 export function appReducer(state: StoreState, action: AllActions): StoreState {
@@ -21,7 +20,7 @@ export function appReducer(state: StoreState, action: AllActions): StoreState {
         }
         case REFRESH_SOURCEFILE: {
             const newState = {...state};
-            fillNewSourceFileState(newState, state.code, state.options);
+            fillNewSourceFileState(action.api, newState, state.code, state.options);
             return newState;
         }
         case SET_CODE: {
@@ -33,9 +32,9 @@ export function appReducer(state: StoreState, action: AllActions): StoreState {
 
             const pos = action.pos;
             const sourceFile = state.compiler.sourceFile;
-            let selectedNode: ts.Node = sourceFile;
+            let selectedNode: Node = sourceFile;
             while (true) {
-                // todo: should use correct function here (ex. ts.forEachChild based on the options)
+                // todo: should use correct function here (ex. api.forEachChild based on the options)
                 const children = selectedNode.getChildren(sourceFile);
                 let found = false;
                 for (const child of children) {
@@ -60,22 +59,20 @@ export function appReducer(state: StoreState, action: AllActions): StoreState {
             };
         }
         case SET_OPTIONS: {
-            const newState = {...state, options: action.options};
-            const fileNeedsChanging = action.options.scriptKind !== state.options.scriptKind
-                || action.options.scriptTarget !== state.options.scriptTarget;
-
-            if (fileNeedsChanging && newState.compiler != null)
-                fillNewSourceFileState(newState, newState.compiler.sourceFile.getFullText(), action.options);
-
-            return newState;
+            return {
+                ...state,
+                options: {
+                    ...state.options,
+                    ...action.options
+                }
+            };
         }
     }
     return state;
 }
 
-function fillNewSourceFileState(state: StoreState, code: string, options: OptionsState) {
-    const api = ts as any;
-    const {sourceFile, program, typeChecker} = createSourceFile(code, options.scriptTarget, options.scriptKind, api);
+function fillNewSourceFileState(api: CompilerApi, state: StoreState, code: string, options: OptionsState) {
+    const {sourceFile, program, typeChecker} = createSourceFile(api, code, options.scriptTarget, options.scriptKind);
     state.compiler = {
         api,
         sourceFile,

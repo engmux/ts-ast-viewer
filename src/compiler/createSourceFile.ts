@@ -1,24 +1,10 @@
-﻿import {getLibFiles} from "../resources/getLibFiles";
-import {CompilerApi, SourceFile, CompilerOptions, ScriptTarget, ScriptKind, CompilerHost} from "./CompilerApi";
+﻿import {CompilerApi, SourceFile, CompilerOptions, ScriptTarget, ScriptKind, CompilerHost} from "./CompilerApi";
 
-const cachedSourceFiles = (api: CompilerApi) => {
-    const internalCache: { [version: string]: { [name: string]: SourceFile | undefined; }; } = {};
-    return () => {
-        if (internalCache[api.tsAstViewerCompilerVersion] == null) {
-            for (const libFile of getLibFiles()) {
-                const sourceFile = api.createSourceFile(libFile.fileName, libFile.text, api.ScriptTarget.Latest, false, api.ScriptKind.TS);
-                internalCache[api.tsAstViewerCompilerVersion][libFile.fileName] = sourceFile;
-            }
-        }
-        return internalCache[api.tsAstViewerCompilerVersion];
-    };
-};
-
-export function createSourceFile(code: string, scriptTarget: ScriptTarget, scriptKind: ScriptKind, api: CompilerApi) {
+export function createSourceFile(api: CompilerApi, code: string, scriptTarget: ScriptTarget, scriptKind: ScriptKind) {
     const name = `/ts-ast-viewer${getExtension(api, scriptKind)}`;
     const sourceFile = api.createSourceFile(name, code, scriptTarget, false, scriptKind);
     const options: CompilerOptions = { strict: true, target: scriptTarget, allowJs: true, module: api.ModuleKind.ES2015 };
-    const files: { [name: string]: SourceFile | undefined; } = { [name]: sourceFile, ...cachedSourceFiles(api) };
+    const files: { [name: string]: SourceFile | undefined; } = { [name]: sourceFile, ...api.tsAstViewerCachedSourceFiles };
 
     const compilerHost: CompilerHost = {
         getSourceFile: (fileName: string, languageVersion: ScriptTarget, onError?: (message: string) => void) => {

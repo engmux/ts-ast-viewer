@@ -8,6 +8,7 @@ import registerServiceWorker from "./registerServiceWorker";
 import "./index.css";
 import "./external/react-treeview.css";
 import "./external/react-splitpane.css";
+import * as actions from "./actions";
 import {StoreState, TreeMode} from "./types";
 import {appReducer} from "./reducers";
 
@@ -17,6 +18,7 @@ const initialCode = "";
 const store = createStore<StoreState>(appReducer, {
     code: initialCode,
     options: {
+        compilerPackageName: "typescript",
         treeMode: TreeMode.getChildren,
         scriptTarget: initialScriptTarget,
         scriptKind: initialScriptKind

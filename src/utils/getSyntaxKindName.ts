@@ -4,12 +4,12 @@ export function getSyntaxKindName(api: CompilerApi, kind: SyntaxKind) {
     return getKindCacheForApi(api)[kind];
 }
 
-const kindCache: { [version: string]: { [kind: number]: string; } } = {};
+const kindCache: { [packageName: string]: { [kind: number]: string; } } = {};
 
 function getKindCacheForApi(api: CompilerApi) {
-    if (kindCache[api.tsAstViewerCompilerVersion] == null)
-        kindCache[api.tsAstViewerCompilerVersion] = getKindNamesForApi(api);
-    return kindCache[api.tsAstViewerCompilerVersion];
+    if (kindCache[api.tsAstViewerPackageName] == null)
+        kindCache[api.tsAstViewerPackageName] = getKindNamesForApi(api);
+    return kindCache[api.tsAstViewerPackageName];
 }
 
 function getKindNamesForApi(api: CompilerApi) {

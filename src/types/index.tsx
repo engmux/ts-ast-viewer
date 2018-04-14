@@ -1,5 +1,5 @@
 ﻿/* barrel:ignore */
-import {CompilerApi, Program, TypeChecker, SourceFile, Node, ScriptTarget, ScriptKind} from "../compiler";
+import {CompilerApi, Program, TypeChecker, SourceFile, Node, ScriptTarget, ScriptKind, compilerPackageNames} from "../compiler";
 
 export interface StoreState {
     code: string;
@@ -16,6 +16,7 @@ export interface CompilerState {
 }
 
 export interface OptionsState {
+    compilerPackageName: compilerPackageNames;
     treeMode: TreeMode;
     scriptTarget: ScriptTarget;
     scriptKind: ScriptKind;

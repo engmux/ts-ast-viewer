@@ -1,5 +1,5 @@
 import * as ts from "typescript";
-import {compilerVersions} from "./getCompilerApi";
+import {compilerPackageNames} from "./compilerVersions";
 
 export interface CompilerApi {
     createSourceFile: typeof ts.createSourceFile;
@@ -10,7 +10,8 @@ export interface CompilerApi {
     ScriptKind: typeof ts.ScriptKind;
     SyntaxKind: typeof ts.SyntaxKind;
     ModuleKind: typeof ts.ModuleKind;
-    tsAstViewerCompilerVersion: compilerVersions;
+    tsAstViewerPackageName: compilerPackageNames;
+    tsAstViewerCachedSourceFiles: { [name: string]: SourceFile | undefined; };
 }
 
 export type Node = ts.Node;

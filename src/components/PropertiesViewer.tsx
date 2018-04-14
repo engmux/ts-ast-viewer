@@ -15,6 +15,7 @@ export class PropertiesViewer extends React.Component<PropertiesViewerProps> {
     render() {
         const {selectedNode, sourceFile, typeChecker, api} = this.props;
         const keyValues = Object.keys(selectedNode).map(key => ({ key, value: selectedNode[key] }));
+        console.log(api.tsAstViewerPackageName);
         return (
             <div className="propertiesViewer">
                 <div className="container">

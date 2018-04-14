@@ -1,30 +1,31 @@
 /* Automatically maintained from package.json. Do not edit! */
 import {CompilerApi} from "./CompilerApi";
+import {compilerPackageNames, importCompilerApi, immportLibFiles} from "./compilerVersions";
 
-export type compilerVersions = "2.8.1" | "2.6.2" | "2.7.2";
+const compilerTypes: { [name: string]: Promise<CompilerApi>; } = {};
 
-const compilerTypes: { [name: string]: CompilerApi; } = {};
-
-export async function getCompilerApi(version: compilerVersions) {
-    if (compilerTypes[version] == null)
-        await fillCompilerVersion(version);
-    return compilerTypes[version];
+export function getCompilerApi(packageName: compilerPackageNames): Promise<CompilerApi> {
+    if (compilerTypes[packageName] == null) {
+        compilerTypes[packageName] = loadCompilerApi(packageName);
+        compilerTypes[packageName].catch(() => delete compilerTypes[packageName]);
+    }
+    return compilerTypes[packageName];
 }
 
-async function fillCompilerVersion(version: compilerVersions) {
-    switch (version) {
-        case "2.8.1":
-            compilerTypes[version] = await import("typescript") as any;
-            break;
-        case "2.6.2":
-            compilerTypes[version] = await import("typescript-2.6.2") as any;
-            break;
-        case "2.7.2":
-            compilerTypes[version] = await import("typescript-2.7.2") as any;
-            break;
-        default:
-            const assertNever: never = version;
-            throw new Error("Not implemented version: " + version);
+async function loadCompilerApi(packageName: compilerPackageNames) {
+    const libFilesPromise = immportLibFiles(packageName);
+    const compilerApiPromise = importCompilerApi(packageName);
+    const api = await compilerApiPromise as any as CompilerApi;
+    api.tsAstViewerPackageName = packageName;
+    api.tsAstViewerCachedSourceFiles = {};
+    const libFiles = await libFilesPromise;
+    for (const sourceFile of getLibSourceFiles())
+        api.tsAstViewerCachedSourceFiles[sourceFile.fileName] = sourceFile;
+    return api;
+
+    function getLibSourceFiles() {
+        return Object.keys(libFiles)
+            .map(key => libFiles[key] as { fileName: string; text: string; })
+            .map(libFile => api.createSourceFile(libFile.fileName, libFile.text, api.ScriptTarget.Latest, false, api.ScriptKind.TS));
     }
-    compilerTypes[version].tsAstViewerCompilerVersion = version;
 }

@@ -1,15 +1,15 @@
 import React from "react";
 import SplitPane from "react-split-pane";
 import * as components from "./components";
-import {Node} from "./compiler";
+import {Node, compilerPackageNames} from "./compiler";
 import {StoreState, OptionsState} from "./types";
 import "./App.css";
 
 export interface Props extends StoreState {
-    onCodeChange: (code: string) => void;
+    onCodeChange: (compilerPackageName: compilerPackageNames, code: string) => void;
     onPosChange: (pos: number) => void;
     onNodeChange: (node: Node) => void;
-    onOptionsChange: (options: OptionsState) => void;
+    onOptionsChange: (compilerPackageName: compilerPackageNames, options: Partial<OptionsState>) => void;
 }
 
 export default function App(props: Props) {
@@ -23,11 +23,11 @@ export default function App(props: Props) {
                     <components.Options
                         api={compiler == null ? undefined : compiler.api}
                         options={props.options}
-                        onChange={options => props.onOptionsChange(options)}/>
+                        onChange={options => props.onOptionsChange(options.compilerPackageName || props.options.compilerPackageName, options)}/>
                 </div>
                 <SplitPane split="vertical" minSize={50} defaultSize="33%">
                     <components.CodeEditor
-                        onChange={code => props.onCodeChange(code)}
+                        onChange={code => props.onCodeChange(props.options.compilerPackageName, code)}
                         onClick={pos => props.onPosChange(pos)}
                         text={props.code} />
                     {getCompilerDependentPanes()}

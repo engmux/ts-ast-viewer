@@ -1,5 +1,5 @@
 ﻿import {connect, Dispatch} from 'react-redux';
-import {Node} from "./compiler";
+import {Node, CompilerApi, getCompilerApi, compilerPackageNames} from "./compiler";
 import App from "./App";
 import * as actions from "./actions";
 import {StoreState, OptionsState} from "./types";
@@ -12,16 +12,35 @@ export function mapStateToProps(state: StoreState) {
 }
 
 export function mapDispatchToProps(dispatch: Dispatch<actions.AllActions>) {
-    const debouncedSourceFileRefresh = debounce(() => dispatch(actions.refreshSourceFile()), 150);
+    const debouncedSourceFileRefresh = debounce<compilerPackageNames>(compilerPackageName => updateSourceFile(compilerPackageName), 150);
+
+    updateSourceFile("typescript");
+
     return {
-        onCodeChange: (code: string) => {
+        onCodeChange: (compilerPackageName: compilerPackageNames, code: string) => {
             dispatch(actions.setCode(code))
-            debouncedSourceFileRefresh();
+            debouncedSourceFileRefresh(compilerPackageName);
         },
         onPosChange: (pos: number) => dispatch(actions.setPos(pos)),
         onNodeChange: (node: Node) => dispatch(actions.setSelectedNode(node)),
-        onOptionsChange: (options: OptionsState) => dispatch(actions.setOptions(options))
+        onOptionsChange: (compilerPackageName: compilerPackageNames, options: Partial<OptionsState>) => {
+            const fileNeedsChanging = options.scriptKind !== undefined || options.scriptTarget !== undefined || options.compilerPackageName !== undefined;
+            dispatch(actions.setOptions(options));
+            if (fileNeedsChanging)
+                debouncedSourceFileRefresh(compilerPackageName);
+        }
     };
+
+    async function updateSourceFile(compilerPackageName: compilerPackageNames) {
+        try {
+            const api = await getCompilerApi(compilerPackageName);
+            dispatch(actions.refreshSourceFile(api));
+        }
+        catch (err) {
+            // todo: better error
+            console.log(err);
+        }
+    }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
