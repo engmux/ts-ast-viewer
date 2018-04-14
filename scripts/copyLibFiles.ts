@@ -1,7 +1,7 @@
 /* Copies the lib.d.ts files from node_modules into the src directory of the library for easy access */
-var glob = require("glob");
-var fs = require("fs");
-var path = require("path");
+import * as glob from "glob";
+import * as fs from "fs";
+import * as path from "path";
 
 glob("./src/resources/libFiles/*.ts", (err, filesToDelete) => {
     for (const filePath of filesToDelete)

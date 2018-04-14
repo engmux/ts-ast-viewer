@@ -1,5 +1,5 @@
 ﻿/* barrel:ignore */
-import ts from "typescript";
+import {Node} from "../compiler";
 import * as constants from "../constants";
 import {OptionsState} from "../types";
 
@@ -21,16 +21,16 @@ export interface RefreshSourceFile {
 
 export function refreshSourceFile(): RefreshSourceFile {
     return {
-        type: constants.REFRESH_SOURCEFILE,
+        type: constants.REFRESH_SOURCEFILE
     };
 }
 
 export interface SetSelectedNode {
     type: constants.SET_SELECTED_NODE;
-    node: ts.Node;
+    node: Node;
 }
 
-export function setSelectedNode(node: ts.Node): SetSelectedNode {
+export function setSelectedNode(node: Node): SetSelectedNode {
     return {
         type: constants.SET_SELECTED_NODE,
         node

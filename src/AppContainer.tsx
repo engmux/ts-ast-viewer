@@ -1,5 +1,5 @@
 ﻿import {connect, Dispatch} from 'react-redux';
-import ts from "typescript";
+import {Node} from "./compiler";
 import App from "./App";
 import * as actions from "./actions";
 import {StoreState, OptionsState} from "./types";
@@ -19,7 +19,7 @@ export function mapDispatchToProps(dispatch: Dispatch<actions.AllActions>) {
             debouncedSourceFileRefresh();
         },
         onPosChange: (pos: number) => dispatch(actions.setPos(pos)),
-        onNodeChange: (node: ts.Node) => dispatch(actions.setSelectedNode(node)),
+        onNodeChange: (node: Node) => dispatch(actions.setSelectedNode(node)),
         onOptionsChange: (options: OptionsState) => dispatch(actions.setOptions(options))
     };
 }

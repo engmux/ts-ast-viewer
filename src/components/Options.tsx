@@ -1,8 +1,9 @@
 import React from "react";
-import * as ts from "typescript";
+import {CompilerApi, ScriptKind, ScriptTarget} from "../compiler";
 import {OptionsState, TreeMode} from "../types";
 
 export interface OptionsProps {
+    api: CompilerApi | undefined;
     options: OptionsState;
     onChange: (options: OptionsState) => void;
 }
@@ -42,13 +43,19 @@ export class Options extends React.Component<OptionsProps, { showOptionsMenu: bo
     }
 
     private getScriptKind() {
-        return this.getEnumOption("Script kind", "ts.ScriptKind", ts.ScriptKind, this.props.options.scriptKind,
-            value => this.props.onChange({ ...this.props.options, scriptKind: value as ts.ScriptKind }));
+        const { api } = this.props;
+        if (api == null)
+            return undefined;
+        return this.getEnumOption("Script kind", "ts.ScriptKind", api.ScriptKind, this.props.options.scriptKind,
+            value => this.props.onChange({ ...this.props.options, scriptKind: value as ScriptKind }));
     }
 
     private getScriptTarget() {
-        return this.getEnumOption("Script target", "ts.ScriptTarget", ts.ScriptTarget, this.props.options.scriptTarget,
-            value => this.props.onChange({ ...this.props.options, scriptTarget: value as ts.ScriptTarget }));
+        const { api } = this.props;
+        if (api == null)
+            return undefined;
+        return this.getEnumOption("Script target", "ts.ScriptTarget", api.ScriptTarget, this.props.options.scriptTarget,
+            value => this.props.onChange({ ...this.props.options, scriptTarget: value as ScriptTarget }));
     }
 
     private getEnumOption(name: string, prefix: string, e: any, currentValue: number, onChange: (value: number) => void) {
