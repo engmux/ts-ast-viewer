@@ -43,7 +43,8 @@ export default function App(props: Props) {
         else if (props.apiLoadingState === ApiLoadingState.Error)
             return <div className={"errorMessage"}>Error loading compiler API. Please refresh the page to try again.</div>;
 
-        return <SplitPane split="vertical" minSize={50} defaultSize="50%">
+        return <components.ErrorBoundary>
+            <SplitPane split="vertical" minSize={50} defaultSize="50%">
             <components.TreeViewer
                 api={compiler.api}
                 selectedNode={compiler.selectedNode}
@@ -55,6 +56,7 @@ export default function App(props: Props) {
                 selectedNode={compiler.selectedNode}
                 sourceFile={compiler.sourceFile}
                 typeChecker={compiler.typeChecker} />
-        </SplitPane>;
+            </SplitPane>
+        </components.ErrorBoundary>;
     }
 }

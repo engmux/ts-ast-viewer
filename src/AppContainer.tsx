@@ -1,5 +1,5 @@
 ﻿import { connect, Dispatch } from 'react-redux';
-import { Node, CompilerApi, getCompilerApi, compilerPackageNames } from "./compiler";
+import { Node, CompilerApi, getCompilerApi, hasLoadedCompilerApi, compilerPackageNames } from "./compiler";
 import App from "./App";
 import * as actions from "./actions";
 import { StoreState, OptionsState, ApiLoadingState } from "./types";
@@ -32,15 +32,19 @@ export function mapDispatchToProps(dispatch: Dispatch<actions.AllActions>) {
     };
 
     async function updateSourceFile(compilerPackageName: compilerPackageNames) {
+        const changeLoadingState = !hasLoadedCompilerApi(compilerPackageName);
         try {
-            dispatch(actions.setApiLoadingState(ApiLoadingState.Loading));
+            if (changeLoadingState)
+                dispatch(actions.setApiLoadingState(ApiLoadingState.Loading));
             const api = await getCompilerApi(compilerPackageName);
             dispatch(actions.refreshSourceFile(api));
-            dispatch(actions.setApiLoadingState(ApiLoadingState.Loaded));
+            if (changeLoadingState)
+                dispatch(actions.setApiLoadingState(ApiLoadingState.Loaded));
         }
         catch (err) {
             console.error(err);
-            dispatch(actions.setApiLoadingState(ApiLoadingState.Error));
+            if (changeLoadingState)
+                dispatch(actions.setApiLoadingState(ApiLoadingState.Error));
         }
     }
 }

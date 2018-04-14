@@ -3,6 +3,7 @@ import { CompilerApi } from "./CompilerApi";
 import { compilerPackageNames, importCompilerApi, immportLibFiles } from "./compilerVersions";
 
 const compilerTypes: { [name: string]: Promise<CompilerApi>; } = {};
+const compilerTypesLoaded: { [name: string]: true; } = {};
 
 export function getCompilerApi(packageName: compilerPackageNames): Promise<CompilerApi> {
     if (compilerTypes[packageName] == null) {
@@ -10,6 +11,10 @@ export function getCompilerApi(packageName: compilerPackageNames): Promise<Compi
         compilerTypes[packageName].catch(() => delete compilerTypes[packageName]);
     }
     return compilerTypes[packageName];
+}
+
+export function hasLoadedCompilerApi(packageName: compilerPackageNames) {
+    return compilerTypesLoaded[packageName] === true;
 }
 
 async function loadCompilerApi(packageName: compilerPackageNames) {
@@ -23,6 +28,7 @@ async function loadCompilerApi(packageName: compilerPackageNames) {
     const libFiles = await libFilesPromise;
     for (const sourceFile of getLibSourceFiles())
         api.tsAstViewer.cachedSourceFiles[sourceFile.fileName] = sourceFile;
+    compilerTypesLoaded[packageName] = true;
     return api;
 
     function getLibSourceFiles() {
